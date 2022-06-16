@@ -16,12 +16,26 @@ function cmd_on_packages() {
 	done
 }
 
-
 function get_package_name() {
 	pushd $SCRIPT_DIR/$1 &> /dev/null
 	package=$(go list -m)
 	popd &> /dev/null
 	echo $package
+}
+
+function input_number_with_max() {
+	local max=$1
+
+	while true; do
+		read  -n 1 -p "Choose a number(1-$1): " input
+		echo -e "" > /dev/tty
+
+		if ((input >= 1 && input <= $1)); then
+			break;
+		fi
+	done
+
+	echo $max
 }
 
 
@@ -31,17 +45,26 @@ function release() {
 
 	echo "Which package would you want to release"
 
-	package_names=()
+	local package_names=()
 	for i in "${!packages[@]}"; do
 		package=${packages[$i]}
 		package_name=$(get_package_name ${packages[$i]})
 		package_names+=($package_name)
 
-		printf "%s\t%s\t%s\n" "$i" "$package" "$package_name"
+		printf "%s\t%s\t%s\n" "$(($i+1))" "$package" "$package_name"
 	done
 
+	# input_index=$(($(input_number_with_max ${#packages[@]} "Choose a number")-1))
+	input_index=0
 
-	# echo $(go list -m -versions ${package_names[0]})
+	echo -e "\nFinding tags associated with: ${package_names[$input_index]}"
+	# echo ${package_names[$input_index]}
+	cut_string="${SCRIPT_DIR##*/}/"
+	# echo $cut_string
+	tag_prefix="$(echo ${package_names[$input_index]} | awk -F $cut_string '{print $2}')/v"
+
+	tags=$(git tag --list | grep $tag_prefix)
+	echo "Tags found: $tags"
 
 	# TODO finish
 }
