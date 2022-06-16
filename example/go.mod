@@ -1,3 +1,3 @@
-module github.com/ctxerrhelper/example
+module github.com/mvndaai/ctxerrhelper/example
 
 go 1.18
