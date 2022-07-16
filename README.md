@@ -1,2 +1,12 @@
 # ctxerrhelper
-Helper Repos for ctxerr
+
+Helper packages to integrate with [ctxerr](https://github.com/mvndaai/ctxerr)
+
+Each package has its own `go.mod` file to avoid importing unwanted package dependencies
+
+
+
+| Package  | Integration | |
+| - | - | - | 
+|  [logrus](/logrus) | https://github.com/sirupsen/logrus |  [![DOC](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/mvndaai/ctxerrhelper/logrus) |
+
