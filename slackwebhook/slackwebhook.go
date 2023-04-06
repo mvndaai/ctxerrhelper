@@ -124,7 +124,7 @@ func (c Config) ToMessage(err error) *Message {
 	return m
 }
 
-// SendSlackMessageWithContext sends a message to the slack webhook url in the config
+// SendSlackMessage sends a message to the slack webhook url in the config
 func (c Config) SendSlackMessage(m *Message) {
 	if m == nil {
 		if c.LogError != nil {
