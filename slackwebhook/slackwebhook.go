@@ -2,6 +2,7 @@ package slackwebhook
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -30,6 +31,12 @@ type (
 	}
 )
 
+type contexter interface {
+	Context() context.Context
+}
+
+type ContextHook func(context.Context, *Message)
+
 type Config struct {
 	// HTTPClient is used to make request to slack
 	HTTPClient *http.Client
@@ -55,6 +62,8 @@ type Config struct {
 	NotPretty bool
 	// Fields function to get feilds to log. Defaults to ctxerr.AllFields
 	Fields func(error) map[string]any
+	// ContextHooks allow adding hooks to update things using the context
+	ContextHooks []ContextHook
 }
 
 const (
@@ -105,10 +114,17 @@ func (c Config) ToMessage(err error) *Message {
 
 		m.Attachments = append(m.Attachments, a)
 	}
+
+	if v, ok := err.(contexter); ok {
+		ctx := v.Context()
+		for _, hook := range c.ContextHooks {
+			hook(ctx, m)
+		}
+	}
 	return m
 }
 
-// SendSlackMessage sends a message to the slack webhook url in the config
+// SendSlackMessageWithContext sends a message to the slack webhook url in the config
 func (c Config) SendSlackMessage(m *Message) {
 	if m == nil {
 		if c.LogError != nil {

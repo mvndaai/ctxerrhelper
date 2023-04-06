@@ -265,3 +265,31 @@ func TestConfigFields(t *testing.T) {
 	assert.Equal(t, err.Error(), m.Text)
 	assert.EqualValues(t, "```{\"a\":\"b\"}```", m.Attachments[0].Text)
 }
+
+func TestContextHook(t *testing.T) {
+	type ctxKeyT string
+	var ctxKey ctxKeyT = "a"
+
+	ctxhook := func(ctx context.Context, m *slackwebhook.Message) {
+		v := ctx.Value(ctxKey)
+		if v != nil {
+			m.Username = fmt.Sprint(v)
+		}
+	}
+
+	conf := slackwebhook.Config{
+		NotPretty:    true,
+		Fields:       func(error) map[string]any { return map[string]any{"a": "b"} },
+		ContextHooks: []slackwebhook.ContextHook{ctxhook},
+	}
+
+	err := fmt.Errorf("err")
+	m := conf.ToMessage(err)
+	assert.Equal(t, "", m.Username)
+
+	expectedUsername := "ctx-username"
+	ctx := context.WithValue(context.Background(), ctxKey, expectedUsername)
+	err = ctxerr.New(ctx, "", "")
+	m = conf.ToMessage(err)
+	assert.Equal(t, expectedUsername, m.Username)
+}
