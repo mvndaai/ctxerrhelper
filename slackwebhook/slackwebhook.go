@@ -62,7 +62,7 @@ type Config struct {
 	NotPretty bool
 	// Fields function to get feilds to log. Defaults to ctxerr.AllFields
 	Fields func(error) map[string]any
-	// ContextHooks allow adding hooks to update things using the context
+	// ContextHooks hooks for adding to the message from a context in the error
 	ContextHooks []ContextHook
 }
 
