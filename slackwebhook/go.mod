@@ -1,9 +1,9 @@
 module github.com/mvndaai/ctxerrhelper/slackwebhook
 
-go 1.18
+go 1.20
 
 require (
-	github.com/mvndaai/ctxerr v0.10.4
+	github.com/mvndaai/ctxerr v0.12.0
 	github.com/stretchr/testify v1.8.1
 )
 
