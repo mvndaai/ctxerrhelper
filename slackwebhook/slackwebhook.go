@@ -99,10 +99,11 @@ func (c Config) ToMessage(err error) *Message {
 			if prefix != "" {
 				prefix += " "
 			}
-			prefix += c.Username
+			// The * is for bold
+			prefix = fmt.Sprintf("%s*%s*", prefix, c.Username)
 		}
 		if prefix != "" {
-			m.Text = fmt.Sprintf("<strong>%s</strong>\n%s", prefix, m.Text)
+			m.Text = fmt.Sprintf("%s\n%s", prefix, m.Text)
 		}
 	}
 
