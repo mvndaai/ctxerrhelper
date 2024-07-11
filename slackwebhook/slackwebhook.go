@@ -91,7 +91,19 @@ func (c Config) ToMessage(err error) *Message {
 	}
 
 	if c.PrintIconAndUsername {
-		m.Text = fmt.Sprintf("%s %s\n%s", c.Icon, c.Username, m.Text)
+		prefix := ""
+		if c.Icon != "" {
+			prefix = c.Icon
+		}
+		if c.Username != "" {
+			if prefix != "" {
+				prefix += " "
+			}
+			prefix += c.Username
+		}
+		if prefix != "" {
+			m.Text = fmt.Sprintf("<strong>%s</strong>\n%s", prefix, m.Text)
+		}
 	}
 
 	ff := c.Fields
