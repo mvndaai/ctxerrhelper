@@ -64,6 +64,8 @@ type Config struct {
 	Fields func(error) map[string]any
 	// ContextHooks hooks for adding to the message from a context in the error
 	ContextHooks []ContextHook
+	// Print Icon and username in message because new apps don't allow changing it
+	PrintIconAndUsername bool
 }
 
 const (
@@ -86,6 +88,10 @@ func (c Config) ToMessage(err error) *Message {
 		Text:     err.Error(),
 		Username: c.Username,
 		Icon:     c.Icon,
+	}
+
+	if c.PrintIconUsername {
+		m.Text = fmt.Sprintf("%s %s\n%s", c.Icon, c.Username, m.Text)
 	}
 
 	ff := c.Fields
