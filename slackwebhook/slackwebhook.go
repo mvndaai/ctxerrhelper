@@ -90,7 +90,7 @@ func (c Config) ToMessage(err error) *Message {
 		Icon:     c.Icon,
 	}
 
-	if c.PrintIconUsername {
+	if c.PrintIconAndUsername {
 		m.Text = fmt.Sprintf("%s %s\n%s", c.Icon, c.Username, m.Text)
 	}
 
